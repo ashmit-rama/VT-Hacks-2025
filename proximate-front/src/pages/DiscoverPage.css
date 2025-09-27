@@ -1,0 +1,191 @@
+.discover-page {
+  min-height: 100vh;
+  padding: 20px;
+  background: #f8f9fa;
+}
+
+.discover-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  background: white;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.discover-title h1 {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.discover-title p {
+  margin: 0;
+  color: #666;
+  font-size: 1rem;
+}
+
+.discover-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.voice-btn {
+  background: #61dafb;
+  color: white;
+}
+
+.voice-btn:hover {
+  background: #4fa8c5;
+  transform: translateY(-2px);
+}
+
+.filters-btn {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.filters-btn:hover {
+  background: #e0e0e0;
+  transform: translateY(-2px);
+}
+
+.voice-input-section {
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: center;
+}
+
+.filters-section {
+  margin-bottom: 32px;
+}
+
+.discovery-section {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.discovery-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.results-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  font-size: 14px;
+}
+
+.discovery-instructions p {
+  margin: 0;
+  color: #999;
+  font-size: 14px;
+  font-style: italic;
+}
+
+.swipeable-container {
+  display: flex;
+  justify-content: center;
+  min-height: 600px;
+}
+
+.no-results {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.no-results-content {
+  text-align: center;
+  color: #666;
+}
+
+.no-results-content h3 {
+  margin: 0 0 12px 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.no-results-content p {
+  margin: 0 0 24px 0;
+  font-size: 1rem;
+}
+
+.reset-filters-btn {
+  background: #61dafb;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.reset-filters-btn:hover {
+  background: #4fa8c5;
+}
+
+@media (max-width: 768px) {
+  .discover-page {
+    padding: 16px;
+  }
+  
+  .discover-header {
+    flex-direction: column;
+    gap: 20px;
+    align-items: stretch;
+  }
+  
+  .discover-title {
+    text-align: center;
+  }
+  
+  .discover-title h1 {
+    font-size: 1.5rem;
+  }
+  
+  .discover-actions {
+    justify-content: center;
+  }
+  
+  .discovery-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .swipeable-container {
+    min-height: 500px;
+  }
+}

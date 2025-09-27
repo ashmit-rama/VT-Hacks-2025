@@ -1,0 +1,286 @@
+.swipeable-discovery {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  position: relative;
+}
+
+.swipeable-stack {
+  position: relative;
+  height: 600px;
+  margin-bottom: 20px;
+}
+
+.housing-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+}
+
+.housing-card:active {
+  cursor: grabbing;
+}
+
+.housing-card-image {
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+}
+
+.housing-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.housing-card-price {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+}
+
+.housing-card-content {
+  padding: 20px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.housing-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.housing-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  flex: 1;
+  margin-right: 12px;
+}
+
+.housing-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  color: #666;
+  white-space: nowrap;
+}
+
+.housing-location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.housing-details {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  color: #666;
+}
+
+.housing-amenities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.amenity-tag {
+  background: #f0f8ff;
+  color: #61dafb;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.amenity-tag.more {
+  background: #f5f5f5;
+  color: #999;
+}
+
+.housing-distance {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.distance-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.distance-label {
+  font-size: 12px;
+  color: #999;
+}
+
+.distance-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.community-tags {
+  margin-top: auto;
+}
+
+.tags-label {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.tags-list {
+  display: flex;
+  gap: 6px;
+}
+
+.community-tag {
+  background: #e8f5e8;
+  color: #4caf50;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.swipeable-actions {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+
+.action-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.action-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.action-button.dislike {
+  background: #ff6b6b;
+  color: white;
+}
+
+.action-button.dislike:hover:not(:disabled) {
+  background: #ff5252;
+  transform: scale(1.1);
+}
+
+.action-button.super-like {
+  background: #ffd700;
+  color: white;
+}
+
+.action-button.super-like:hover:not(:disabled) {
+  background: #ffcc02;
+  transform: scale(1.1);
+}
+
+.action-button.like {
+  background: #4caf50;
+  color: white;
+}
+
+.action-button.like:hover:not(:disabled) {
+  background: #45a049;
+  transform: scale(1.1);
+}
+
+.swipeable-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 4px;
+  background: #e0e0e0;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #61dafb, #4fa8c5);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 14px;
+  color: #666;
+  white-space: nowrap;
+}
+
+.swipeable-discovery-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+}
+
+.empty-state {
+  text-align: center;
+  color: #666;
+}
+
+.empty-state h3 {
+  margin: 16px 0 8px 0;
+  color: #333;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 14px;
+}
