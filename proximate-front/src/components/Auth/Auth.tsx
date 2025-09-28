@@ -1,14 +1,5 @@
 import React, { useState } from "react";
-import {
-  Mail,
-  Lock,
-  User,
-  Eye,
-  EyeOff,
-  LogIn,
-  UserPlus,
-  Shield,
-} from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { useProximateStore } from "../../store";
 import { User as UserType } from "../../types";
 import "./Auth.css";
@@ -24,8 +15,9 @@ const Auth: React.FC<AuthProps> = ({ onClose }) => {
     email: "",
     password: "",
     confirmPassword: "",
-    name: "",
-    role: "student" as "student" | "tenant" | "landlord",
+    username: "",
+    firstName: "",
+    lastName: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -60,8 +52,14 @@ const Auth: React.FC<AuthProps> = ({ onClose }) => {
     }
 
     if (mode === "register") {
-      if (!formData.name) {
-        newErrors.name = "Name is required";
+      if (!formData.username) {
+        newErrors.username = "Username is required";
+      }
+      if (!formData.firstName) {
+        newErrors.firstName = "First name is required";
+      }
+      if (!formData.lastName) {
+        newErrors.lastName = "Last name is required";
       }
 
       if (!formData.confirmPassword) {
@@ -92,24 +90,24 @@ const Auth: React.FC<AuthProps> = ({ onClose }) => {
         // Mock login
         const mockUser: UserType = {
           id: "1",
+          username: "john_doe",
           email: formData.email,
-          name: "John Doe",
-          role: "student",
+          firstName: "John",
+          lastName: "Doe",
           preferences: {
-            commuteMode: "walking",
-            commuteTime: 15,
-            budget: { min: 500, max: 1200 },
-            quietHours: { start: "22:00", end: "08:00" },
-            interests: ["studying", "fitness", "cooking"],
-            accessibilityNeeds: [],
             campus: "blacksburg",
-            schoolDistance: 1.5,
-            gymDistance: 2.0,
+            priceRange: { min: 500, max: 1200 },
+            bedrooms: [1, 2],
+            bathrooms: [1, 2],
+            amenities: ["WiFi", "Parking", "Laundry"],
+            distanceToCampus: 1.5,
             petFriendly: false,
             furnished: true,
             parking: true,
             laundry: true,
             wifi: true,
+            moveInDate: new Date(),
+            leaseLength: 12,
           },
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -120,24 +118,24 @@ const Auth: React.FC<AuthProps> = ({ onClose }) => {
         // Mock registration
         const mockUser: UserType = {
           id: "2",
+          username: formData.username || "new_user",
           email: formData.email,
-          name: formData.name,
-          role: formData.role,
+          firstName: formData.firstName || "New",
+          lastName: formData.lastName || "User",
           preferences: {
-            commuteMode: "walking",
-            commuteTime: 15,
-            budget: { min: 500, max: 1200 },
-            quietHours: { start: "22:00", end: "08:00" },
-            interests: [],
-            accessibilityNeeds: [],
             campus: "blacksburg",
-            schoolDistance: 1.5,
-            gymDistance: 2.0,
+            priceRange: { min: 500, max: 1200 },
+            bedrooms: [1, 2],
+            bathrooms: [1, 2],
+            amenities: ["WiFi", "Parking", "Laundry"],
+            distanceToCampus: 1.5,
             petFriendly: false,
             furnished: true,
             parking: true,
             laundry: true,
             wifi: true,
+            moveInDate: new Date(),
+            leaseLength: 12,
           },
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -165,24 +163,24 @@ const Auth: React.FC<AuthProps> = ({ onClose }) => {
 
       const mockUser: UserType = {
         id: "3",
+        username: `${provider}_user`,
         email: `user@${provider}.com`,
-        name: `${provider.charAt(0).toUpperCase() + provider.slice(1)} User`,
-        role: "student",
+        firstName: provider.charAt(0).toUpperCase() + provider.slice(1),
+        lastName: "User",
         preferences: {
-          commuteMode: "walking",
-          commuteTime: 15,
-          budget: { min: 500, max: 1200 },
-          quietHours: { start: "22:00", end: "08:00" },
-          interests: [],
-          accessibilityNeeds: [],
           campus: "blacksburg",
-          schoolDistance: 1.5,
-          gymDistance: 2.0,
+          priceRange: { min: 500, max: 1200 },
+          bedrooms: [1, 2],
+          bathrooms: [1, 2],
+          amenities: ["WiFi", "Parking", "Laundry"],
+          distanceToCampus: 1.5,
           petFriendly: false,
           furnished: true,
           parking: true,
           laundry: true,
           wifi: true,
+          moveInDate: new Date(),
+          leaseLength: 12,
         },
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -205,7 +203,6 @@ const Auth: React.FC<AuthProps> = ({ onClose }) => {
       <div className="auth-container">
         <div className="auth-header">
           <div className="auth-logo">
-            <Shield size={32} color="#61dafb" />
             <h2>Proximate</h2>
           </div>
           {onClose && (
@@ -220,14 +217,12 @@ const Auth: React.FC<AuthProps> = ({ onClose }) => {
             className={`tab ${mode === "login" ? "active" : ""}`}
             onClick={() => setMode("login")}
           >
-            <LogIn size={16} />
             Sign In
           </button>
           <button
             className={`tab ${mode === "register" ? "active" : ""}`}
             onClick={() => setMode("register")}
           >
-            <UserPlus size={16} />
             Sign Up
           </button>
         </div>
@@ -235,30 +230,64 @@ const Auth: React.FC<AuthProps> = ({ onClose }) => {
         <div className="auth-content">
           <form onSubmit={handleSubmit} className="auth-form">
             {mode === "register" && (
-              <div className="form-group">
-                <label htmlFor="name">Full Name</label>
-                <div className="input-wrapper">
-                  <User size={20} className="input-icon" />
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    placeholder="Enter your full name"
-                    className={errors.name ? "error" : ""}
-                  />
+              <>
+                <div className="form-group">
+                  <label htmlFor="username">Username</label>
+                  <div className="input-wrapper">
+                    <input
+                      type="text"
+                      id="username"
+                      name="username"
+                      value={formData.username}
+                      onChange={handleInputChange}
+                      placeholder="Enter your username"
+                      className={errors.username ? "error" : ""}
+                    />
+                  </div>
+                  {errors.username && (
+                    <span className="error-message">{errors.username}</span>
+                  )}
                 </div>
-                {errors.name && (
-                  <span className="error-message">{errors.name}</span>
-                )}
-              </div>
+                <div className="form-group">
+                  <label htmlFor="firstName">First Name</label>
+                  <div className="input-wrapper">
+                    <input
+                      type="text"
+                      id="firstName"
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleInputChange}
+                      placeholder="Enter your first name"
+                      className={errors.firstName ? "error" : ""}
+                    />
+                  </div>
+                  {errors.firstName && (
+                    <span className="error-message">{errors.firstName}</span>
+                  )}
+                </div>
+                <div className="form-group">
+                  <label htmlFor="lastName">Last Name</label>
+                  <div className="input-wrapper">
+                    <input
+                      type="text"
+                      id="lastName"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleInputChange}
+                      placeholder="Enter your last name"
+                      className={errors.lastName ? "error" : ""}
+                    />
+                  </div>
+                  {errors.lastName && (
+                    <span className="error-message">{errors.lastName}</span>
+                  )}
+                </div>
+              </>
             )}
 
             <div className="form-group">
               <label htmlFor="email">Email</label>
               <div className="input-wrapper">
-                <Mail size={20} className="input-icon" />
                 <input
                   type="email"
                   id="email"
@@ -277,7 +306,6 @@ const Auth: React.FC<AuthProps> = ({ onClose }) => {
             <div className="form-group">
               <label htmlFor="password">Password</label>
               <div className="input-wrapper">
-                <Lock size={20} className="input-icon" />
                 <input
                   type={showPassword ? "text" : "password"}
                   id="password"
@@ -304,7 +332,6 @@ const Auth: React.FC<AuthProps> = ({ onClose }) => {
               <div className="form-group">
                 <label htmlFor="confirmPassword">Confirm Password</label>
                 <div className="input-wrapper">
-                  <Lock size={20} className="input-icon" />
                   <input
                     type={showPassword ? "text" : "password"}
                     id="confirmPassword"
@@ -320,22 +347,6 @@ const Auth: React.FC<AuthProps> = ({ onClose }) => {
                     {errors.confirmPassword}
                   </span>
                 )}
-              </div>
-            )}
-
-            {mode === "register" && (
-              <div className="form-group">
-                <label htmlFor="role">Role</label>
-                <select
-                  id="role"
-                  name="role"
-                  value={formData.role}
-                  onChange={handleInputChange}
-                >
-                  <option value="student">Student</option>
-                  <option value="tenant">Tenant</option>
-                  <option value="landlord">Landlord</option>
-                </select>
               </div>
             )}
 

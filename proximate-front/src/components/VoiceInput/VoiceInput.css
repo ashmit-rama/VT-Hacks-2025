@@ -17,7 +17,7 @@
 }
 
 .language-icon {
-  color: #61dafb;
+  color: var(--primary-color);
 }
 
 .voice-input-main {
@@ -32,19 +32,19 @@
   height: 80px;
   border-radius: 50%;
   border: none;
-  background: linear-gradient(135deg, #61dafb, #4fa8c5);
+  background: linear-gradient(135deg, var(--primary-color), #6B1A35);
   color: white;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 16px rgba(97, 218, 251, 0.3);
+  box-shadow: 0 4px 16px rgba(134, 31, 65, 0.3);
 }
 
 .voice-button:hover:not(.disabled) {
   transform: scale(1.05);
-  box-shadow: 0 6px 20px rgba(97, 218, 251, 0.4);
+  box-shadow: 0 6px 20px rgba(134, 31, 65, 0.4);
 }
 
 .voice-button.recording {
@@ -84,7 +84,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #61dafb;
+  color: var(--primary-color);
   font-size: 14px;
 }
 
@@ -92,7 +92,7 @@
   width: 16px;
   height: 16px;
   border: 2px solid #f3f3f3;
-  border-top: 2px solid #61dafb;
+  border-top: 2px solid var(--primary-color);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -110,7 +110,7 @@
   padding: 16px;
   background: #f8f9fa;
   border-radius: 12px;
-  border-left: 4px solid #61dafb;
+  border-left: 4px solid var(--primary-color);
 }
 
 .transcript-header {
@@ -145,6 +145,94 @@
   text-align: center;
   color: #ff6b6b;
   padding: 20px;
+}
+
+.confirmation-box {
+  margin-top: 20px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 2px solid var(--primary-color);
+  text-align: center;
+}
+
+.confirmation-box h3 {
+  margin: 0 0 12px 0;
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.confirmation-box p {
+  margin: 0 0 16px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.transcript-edit {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 16px 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  line-height: 1.6;
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+  display: block;
+  text-align: center;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+.transcript-edit:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(134, 31, 65, 0.1);
+}
+
+.confirmation-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  justify-content: flex-end;
+}
+
+.cancel-btn {
+  padding: 10px 20px;
+  background: #f5f5f5;
+  color: #666;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-btn:hover {
+  background: #e0e0e0;
+}
+
+.confirm-btn {
+  padding: 10px 20px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.confirm-btn:hover {
+  background: #6B1A35;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(134, 31, 65, 0.3);
 }
 
 @keyframes pulse {

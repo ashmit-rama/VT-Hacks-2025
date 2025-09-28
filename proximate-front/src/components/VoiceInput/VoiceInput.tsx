@@ -7,29 +7,35 @@ import "./VoiceInput.css";
 
 interface VoiceInputProps {
   onTranscript?: (transcript: string, entities: ExtractedEntity[]) => void;
+  onSearchResults?: (results: any) => void;
   language?: string;
   disabled?: boolean;
+  showConfirmation?: boolean;
 }
 
 const VoiceInput: React.FC<VoiceInputProps> = ({
   onTranscript,
+  onSearchResults,
   language = "en-US",
   disabled = false,
+  showConfirmation = true,
 }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [confidence, setConfidence] = useState(0);
-  const [detectedLanguage, setDetectedLanguage] = useState(language);
-  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [detectedLanguage] = useState(language);
+  const [showConfirmationMessage, setShowConfirmationMessage] = useState(false);
+  const [showConfirmationBox, setShowConfirmationBox] = useState(false);
+  const [editedTranscript, setEditedTranscript] = useState("");
 
-  const { addVoiceInput } = useProximateStore();
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunksRef = useRef<Blob[]>([]);
+  const { addVoiceInput, voiceSearch } = useProximateStore();
+  const recognitionRef = useRef<any>(null);
 
   const {
     transcript: speechTranscript,
     browserSupportsSpeechRecognition,
+    resetTranscript,
   } = useSpeechRecognition();
 
   useEffect(() => {
@@ -43,65 +49,122 @@ const VoiceInput: React.FC<VoiceInputProps> = ({
     if (disabled) return;
 
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorderRef.current = new MediaRecorder(stream);
-      audioChunksRef.current = [];
-
-      mediaRecorderRef.current.ondataavailable = (event) => {
-        audioChunksRef.current.push(event.data);
-      };
-
-      mediaRecorderRef.current.onstop = () => {
-        const audioBlob = new Blob(audioChunksRef.current, {
-          type: "audio/wav",
-        });
-        processAudioBlob(audioBlob);
-      };
-
-      mediaRecorderRef.current.start();
       setIsRecording(true);
+      resetTranscript(); // Clear previous transcript
+
+      // Use browser's speech recognition API directly
+      const SpeechRecognition =
+        (window as any).SpeechRecognition ||
+        (window as any).webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = language;
+        recognition.maxAlternatives = 1;
+
+        recognition.onresult = (event: any) => {
+          let finalTranscript = "";
+
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            const transcript = event.results[i][0].transcript;
+            if (event.results[i].isFinal) {
+              finalTranscript += transcript + " ";
+            }
+          }
+
+          // Only add final transcripts to avoid repetition
+          if (finalTranscript.trim()) {
+            setTranscript((prevTranscript) => {
+              return prevTranscript + finalTranscript.trim() + " ";
+            });
+          }
+        };
+
+        recognition.onend = () => {
+          // Only stop if user manually stopped, otherwise restart
+          if (isRecording) {
+            // Recognition ended unexpectedly, restart it
+            setTimeout(() => {
+              if (isRecording && recognitionRef.current) {
+                try {
+                  recognitionRef.current.start();
+                } catch (error) {
+                  console.error("Error restarting recognition:", error);
+                  setIsRecording(false);
+                }
+              }
+            }, 100);
+          } else {
+            setIsRecording(false);
+          }
+        };
+
+        recognition.onerror = (event: any) => {
+          console.error("Speech recognition error:", event.error);
+          setIsRecording(false);
+        };
+
+        recognition.start();
+        recognitionRef.current = recognition;
+      }
     } catch (error) {
       console.error("Error starting recording:", error);
-    }
-  };
-
-  const stopRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
       setIsRecording(false);
     }
   };
 
-  const processAudioBlob = async (audioBlob: Blob) => {
+  const stopRecording = () => {
+    if (isRecording && recognitionRef.current) {
+      setIsRecording(false); // Set this first to prevent auto-restart
+      recognitionRef.current.stop();
+      // Process the transcript after stopping
+      setTimeout(() => {
+        processTranscript();
+      }, 500); // Small delay to ensure transcript is finalized
+    }
+  };
+
+  const processTranscript = async () => {
     setIsProcessing(true);
 
     try {
-      // Mock processing - in real app, this would call your AI service
-      const mockTranscript =
-        transcript || "I need a place near campus with parking and laundry";
-      const mockEntities = extractEntities(mockTranscript);
+      // Use the actual speech recognition transcript from our state
+      const finalTranscript =
+        transcript ||
+        speechTranscript ||
+        "I need a place near campus with parking and laundry";
+      const entities = extractEntities(finalTranscript);
 
       const voiceInput: VoiceInputType = {
         id: Date.now().toString(),
         userId: "current-user", // Would be from auth context
-        audioBlob,
-        transcript: mockTranscript,
+        audioBlob: new Blob(), // Empty blob since we're using speech recognition
+        transcript: finalTranscript,
         language: detectedLanguage,
         confidence,
-        extractedEntities: mockEntities,
+        extractedEntities: entities,
         createdAt: new Date(),
       };
 
       addVoiceInput(voiceInput);
 
-      if (onTranscript) {
-        onTranscript(mockTranscript, mockEntities);
+      // Perform intelligent voice search
+      try {
+        const searchResults = await voiceSearch(finalTranscript, confidence);
+        if (onSearchResults) {
+          onSearchResults(searchResults);
+        }
+      } catch (searchError) {
+        console.error("Error in voice search:", searchError);
       }
 
-      setShowConfirmation(true);
-      setTimeout(() => setShowConfirmation(false), 3000);
+      setEditedTranscript(finalTranscript);
+      setShowConfirmationBox(true);
+      setShowConfirmationMessage(true);
+      setTimeout(() => setShowConfirmationMessage(false), 3000);
     } catch (error) {
-      console.error("Error processing audio:", error);
+      console.error("Error processing transcript:", error);
     } finally {
       setIsProcessing(false);
     }
@@ -167,6 +230,18 @@ const VoiceInput: React.FC<VoiceInputProps> = ({
     return entities;
   };
 
+  const handleConfirmTranscript = () => {
+    if (onTranscript) {
+      const entities = extractEntities(editedTranscript);
+      onTranscript(editedTranscript, entities);
+    }
+    setShowConfirmationBox(false);
+  };
+
+  const handleCancelTranscript = () => {
+    setShowConfirmationBox(false);
+    setEditedTranscript("");
+  };
 
   if (!browserSupportsSpeechRecognition) {
     return (
@@ -206,7 +281,7 @@ const VoiceInput: React.FC<VoiceInputProps> = ({
           {isRecording && (
             <div className="recording-indicator">
               <div className="pulse"></div>
-              <span>Recording...</span>
+              <span>Listening...</span>
             </div>
           )}
 
@@ -217,7 +292,7 @@ const VoiceInput: React.FC<VoiceInputProps> = ({
             </div>
           )}
 
-          {showConfirmation && (
+          {showConfirmationMessage && (
             <div className="confirmation-indicator">
               <CheckCircle size={20} />
               <span>Preferences captured!</span>
@@ -236,6 +311,28 @@ const VoiceInput: React.FC<VoiceInputProps> = ({
             </span>
           </div>
           <div className="transcript-text">{transcript}</div>
+        </div>
+      )}
+
+      {showConfirmationBox && (
+        <div className="confirmation-box">
+          <h3>Confirm Your Search</h3>
+          <p>Please review and edit your search query:</p>
+          <textarea
+            value={editedTranscript}
+            onChange={(e) => setEditedTranscript(e.target.value)}
+            className="transcript-edit"
+            rows={4}
+            placeholder="Edit your search query here..."
+          />
+          <div className="confirmation-actions">
+            <button onClick={handleCancelTranscript} className="cancel-btn">
+              Cancel
+            </button>
+            <button onClick={handleConfirmTranscript} className="confirm-btn">
+              Confirm & Search
+            </button>
+          </div>
         </div>
       )}
 

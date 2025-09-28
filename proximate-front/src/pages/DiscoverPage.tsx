@@ -1,218 +1,250 @@
 import React, { useState } from "react";
-import { Mic, Filter, MapPin } from "lucide-react";
-import VoiceInput from "../components/VoiceInput/VoiceInput";
+import { useNavigate } from "react-router-dom";
+import { Mic, Search, ArrowLeft } from "lucide-react";
 import SwipeableDiscovery from "../components/SwipeableDiscovery/SwipeableDiscovery";
-import CampusSearch from "../components/CampusSearch/CampusSearch";
+import VoiceInput from "../components/VoiceInput/VoiceInput";
 import { HousingOption, ExtractedEntity } from "../types";
+import { useProximateStore } from "../store";
 import "./DiscoverPage.css";
+
+// Define the search results type
+interface SearchResults {
+  success: boolean;
+  query: string;
+  classification: {
+    intent: string;
+    housingType: string;
+    confidence: number;
+    extractedEntities: Array<{
+      type: string;
+      value: any;
+      confidence: number;
+    }>;
+  };
+  searchFilters: any;
+  results: HousingOption[];
+  totalResults: number;
+  timestamp: string;
+}
 
 interface DiscoverPageProps {
   housingOptions: HousingOption[];
   onHousingSelect: (housing: HousingOption) => void;
-  onVoiceTranscript: (transcript: string, entities: ExtractedEntity[]) => void;
-  onSearch: (filters: any) => void;
-  onCampusChange: (campus: any) => void;
   onLike: (housing: HousingOption) => void;
   onDislike: (housing: HousingOption) => void;
-  onSuperLike: (housing: HousingOption) => void;
+  onVoiceTranscript: (transcript: string, entities: ExtractedEntity[]) => void;
 }
 
 const DiscoverPage: React.FC<DiscoverPageProps> = ({
   housingOptions,
   onHousingSelect,
-  onVoiceTranscript,
-  onSearch,
-  onCampusChange,
   onLike,
   onDislike,
-  onSuperLike,
+  onVoiceTranscript,
 }) => {
-  const [showVoiceInput, setShowVoiceInput] = useState(false);
-  const [showFilters, setShowFilters] = useState(false);
+  const navigate = useNavigate();
   const [filteredHousing, setFilteredHousing] = useState(housingOptions);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [, setSearchResults] = useState<SearchResults | null>(null);
+  const [showVoiceInput, setShowVoiceInput] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showResults, setShowResults] = useState(false);
 
-  const handleVoiceTranscript = (
-    transcript: string,
-    entities: ExtractedEntity[]
-  ) => {
-    onVoiceTranscript(transcript, entities);
-    setShowVoiceInput(false);
+  const { intelligentSearch } = useProximateStore();
 
-    // Apply filters based on extracted entities
-    let filtered = [...housingOptions];
+  const handleSearchInput = async (query: string) => {
+    setSearchQuery(query);
 
-    entities.forEach((entity) => {
-      switch (entity.type) {
-        case "budget":
-          filtered = filtered.filter(
-            (housing) => housing.price <= (entity.value as number)
-          );
-          break;
-        case "amenity":
-          filtered = filtered.filter((housing) =>
+    if (query.trim() === "") {
+      setFilteredHousing(housingOptions);
+      setSearchResults(null);
+      setShowResults(false);
+      setIsSearching(false);
+      return;
+    }
+
+    setIsSearching(true);
+
+    try {
+      console.log("🔍 Starting search for:", query);
+      // Use intelligent search for better results
+      const results = await intelligentSearch(query, false);
+      console.log("✅ Search results:", results);
+
+      if (results && results.results && results.results.length > 0) {
+        setSearchResults(results);
+        console.log("🏠 First housing object:", results.results[0]);
+        console.log("🏠 First housing ID:", results.results[0].id);
+        console.log("🏠 First housing _id:", (results.results[0] as any)._id);
+        setFilteredHousing(results.results);
+        console.log(
+          "📊 Set filtered housing to:",
+          results.results.length,
+          "results"
+        );
+      } else {
+        console.log("⚠️ No results found, showing fallback");
+        // Fallback to simple text-based filtering
+        const filtered = housingOptions.filter(
+          (housing) =>
+            housing.title.toLowerCase().includes(query.toLowerCase()) ||
+            housing.description.toLowerCase().includes(query.toLowerCase()) ||
+            housing.address.toLowerCase().includes(query.toLowerCase()) ||
+            housing.city.toLowerCase().includes(query.toLowerCase()) ||
+            housing.state.toLowerCase().includes(query.toLowerCase()) ||
             housing.amenities.some((amenity) =>
-              amenity
-                .toLowerCase()
-                .includes((entity.value as string).toLowerCase())
+              amenity.toLowerCase().includes(query.toLowerCase())
             )
-          );
-          break;
-        case "commute_mode":
-          // In a real app, this would filter based on commute preferences
-          break;
+        );
+        setFilteredHousing(filtered);
+        setSearchResults(null);
       }
-    });
-
-    setFilteredHousing(filtered);
+    } catch (error) {
+      console.error("❌ Error in intelligent search:", error);
+      // Fallback to simple text-based filtering
+      const filtered = housingOptions.filter(
+        (housing) =>
+          housing.title.toLowerCase().includes(query.toLowerCase()) ||
+          housing.description.toLowerCase().includes(query.toLowerCase()) ||
+          housing.address.toLowerCase().includes(query.toLowerCase()) ||
+          housing.city.toLowerCase().includes(query.toLowerCase()) ||
+          housing.state.toLowerCase().includes(query.toLowerCase()) ||
+          housing.amenities.some((amenity) =>
+            amenity.toLowerCase().includes(query.toLowerCase())
+          )
+      );
+      setFilteredHousing(filtered);
+      setSearchResults(null);
+    } finally {
+      setIsSearching(false);
+      // Show results with a smooth transition after a brief delay
+      setTimeout(() => {
+        setShowResults(true);
+      }, 300);
+    }
   };
 
-  const handleSearch = (filters: any) => {
-    onSearch(filters);
-
-    // Apply filters to housing options
-    let filtered = [...housingOptions];
-
-    if (filters.priceRange) {
-      filtered = filtered.filter(
-        (housing) =>
-          housing.price >= filters.priceRange.min &&
-          housing.price <= filters.priceRange.max
-      );
-    }
-
-    if (filters.bedrooms && filters.bedrooms.length > 0) {
-      filtered = filtered.filter((housing) =>
-        filters.bedrooms.includes(housing.bedrooms)
-      );
-    }
-
-    if (filters.bathrooms && filters.bathrooms.length > 0) {
-      filtered = filtered.filter((housing) =>
-        filters.bathrooms.includes(housing.bathrooms)
-      );
-    }
-
-    if (filters.petFriendly) {
-      filtered = filtered.filter((housing) =>
-        housing.amenities.some((amenity) =>
-          amenity.toLowerCase().includes("pet")
-        )
-      );
-    }
-
-    if (filters.furnished) {
-      filtered = filtered.filter((housing) =>
-        housing.amenities.includes("Furnished")
-      );
-    }
-
-    if (filters.parking) {
-      filtered = filtered.filter((housing) =>
-        housing.amenities.includes("Parking")
-      );
-    }
-
-    if (filters.laundry) {
-      filtered = filtered.filter((housing) =>
-        housing.amenities.includes("Laundry")
-      );
-    }
-
-    if (filters.wifi) {
-      filtered = filtered.filter((housing) =>
-        housing.amenities.includes("WiFi")
-      );
-    }
-
-    if (filters.distanceToCampus) {
-      filtered = filtered.filter(
-        (housing) => housing.distanceToCampus <= filters.distanceToCampus
-      );
-    }
-
-    setFilteredHousing(filtered);
+  const handleVoiceSearchResults = (results: SearchResults) => {
+    setSearchResults(results);
+    setFilteredHousing(results.results || []);
+    setShowVoiceInput(false);
+    // Show results with transition
+    setTimeout(() => {
+      setShowResults(true);
+    }, 300);
   };
 
   return (
     <div className="discover-page">
-      <div className="discover-header">
-        <div className="discover-title">
-          <h1>Discover Housing</h1>
-          <p>Find your perfect home near campus</p>
+      <div className="search-container">
+        <div className="back-button">
+          <button onClick={() => navigate("/")} className="back-link">
+            <ArrowLeft size={20} />
+            Back to Home
+          </button>
         </div>
 
-        <div className="discover-actions">
-          <button
-            className="action-btn voice-btn"
-            onClick={() => setShowVoiceInput(!showVoiceInput)}
-          >
-            <Mic size={20} />
-            Voice Search
-          </button>
+        <div className="search-content">
+          <h1>Find Your Perfect Home</h1>
+          <p className="search-subtitle">
+            Search for housing or use voice to describe what you're looking for
+          </p>
 
-          <button
-            className="action-btn filters-btn"
-            onClick={() => setShowFilters(!showFilters)}
-          >
-            <Filter size={20} />
-            Filters
-          </button>
+          <div className="search-interface">
+            <div className="search-bar-container">
+              <div className="search-input-wrapper">
+                <Search size={20} className="search-icon" />
+                <input
+                  type="text"
+                  placeholder="Search for housing, location, amenities..."
+                  value={searchQuery}
+                  onChange={(e) => handleSearchInput(e.target.value)}
+                  className="search-input"
+                />
+              </div>
+              <button
+                className="search-btn"
+                onClick={() => {
+                  if (searchQuery.trim()) {
+                    handleSearchInput(searchQuery);
+                  }
+                }}
+                disabled={!searchQuery.trim()}
+              >
+                Search
+              </button>
+            </div>
+
+            <div className="voice-section">
+              <button
+                className="voice-btn"
+                onClick={() => setShowVoiceInput(!showVoiceInput)}
+              >
+                <Mic size={24} />
+                Voice Search
+              </button>
+              <p className="voice-description">
+                Speak your preferences and let AI find the perfect match
+              </p>
+            </div>
+          </div>
+
+          {showVoiceInput && (
+            <div className="voice-input-section">
+              <VoiceInput
+                onTranscript={(transcript) => {
+                  setSearchQuery(transcript);
+                  handleSearchInput(transcript);
+                }}
+                onSearchResults={handleVoiceSearchResults}
+              />
+            </div>
+          )}
         </div>
       </div>
 
-      {showVoiceInput && (
-        <div className="voice-input-section">
-          <VoiceInput onTranscript={handleVoiceTranscript} />
+      {isSearching && (
+        <div className="search-loading">
+          <div className="loading-spinner"></div>
+          <p>Searching for the perfect match...</p>
         </div>
       )}
 
-      {showFilters && (
-        <div className="filters-section">
-          <CampusSearch
-            onSearch={handleSearch}
-            onCampusChange={onCampusChange}
-          />
+      {filteredHousing.length > 0 && showResults && (
+        <div className="discover-content">
+          <div className="swipeable-wrapper">
+            <p className="swipe-instructions">
+              ← Pass | ↓ My Favorites (Private) | → Saved Collection (Shared)
+            </p>
+          </div>
+
+          <div className="swipeable-container">
+            <SwipeableDiscovery
+              housingOptions={filteredHousing}
+              onLike={onLike}
+              onDislike={onDislike}
+              onSwipe={(action) => {
+                console.log("Swipe action:", action);
+              }}
+            />
+          </div>
         </div>
       )}
 
-      <div className="discovery-section">
-        <div className="discovery-header">
-          <div className="results-info">
-            <MapPin size={16} />
-            <span>{filteredHousing.length} housing options found</span>
-          </div>
-
-          <div className="discovery-instructions">
-            <p>Swipe right to like, left to pass, or up to super like</p>
-          </div>
-        </div>
-
-        <div className="swipeable-container">
-          <SwipeableDiscovery
-            housingOptions={filteredHousing}
-            onLike={onLike}
-            onDislike={onDislike}
-            onSuperLike={onSuperLike}
-            onSwipe={(action) => {
-              console.log("Swipe action:", action);
-            }}
-          />
-        </div>
-      </div>
-
-      {filteredHousing.length === 0 && (
+      {filteredHousing.length === 0 && searchQuery && showResults && (
         <div className="no-results">
           <div className="no-results-content">
             <h3>No housing options found</h3>
-            <p>Try adjusting your filters or search criteria</p>
+            <p>Try adjusting your search criteria</p>
             <button
               className="reset-filters-btn"
               onClick={() => {
+                setSearchQuery("");
                 setFilteredHousing(housingOptions);
-                setShowFilters(false);
+                setSearchResults(null);
               }}
             >
-              Reset Filters
+              Clear Search
             </button>
           </div>
         </div>

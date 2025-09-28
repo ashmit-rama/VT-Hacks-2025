@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { HelmetProvider } from "react-helmet-async";
+import { motion, AnimatePresence } from "framer-motion";
 import { useProximateStore } from "./store";
 import { HousingOption, Collection } from "./types";
 
@@ -15,15 +16,57 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import CommunityFeatures from "./components/CommunityFeatures/CommunityFeatures";
 import Auth from "./components/Auth/Auth";
-import CollectionSharing from "./components/CollectionSharing/CollectionSharing";
 
 // Pages
 import HomePage from "./pages/HomePage";
 import DiscoverPage from "./pages/DiscoverPage";
-import CollectionsPage from "./pages/CollectionsPage";
 import ProfilePage from "./pages/ProfilePage";
+import CollectionsPage from "./pages/CollectionsPage";
+import AnimatedBackground from "./components/AnimatedBackground/AnimatedBackground";
 
 import "./App.css";
+
+// Page transition variants
+const pageVariants = {
+  initial: {
+    opacity: 0,
+    y: 20,
+    scale: 0.98,
+  },
+  in: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+  },
+  out: {
+    opacity: 0,
+    y: -20,
+    scale: 1.02,
+  },
+};
+
+const pageTransition = {
+  type: "tween",
+  ease: "anticipate",
+  duration: 0.4,
+};
+
+// Animated page wrapper
+const AnimatedPage: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  return (
+    <motion.div
+      initial="initial"
+      animate="in"
+      exit="out"
+      variants={pageVariants}
+      transition={pageTransition}
+    >
+      {children}
+    </motion.div>
+  );
+};
 
 function App() {
   const {
@@ -31,16 +74,42 @@ function App() {
     housingOptions,
     setHousingOptions,
     collections,
-    setCollections,
+    addToSavedCollection,
+    createCollection,
+    clearCollections,
+    logout,
   } = useProximateStore();
   const [showAuth, setShowAuth] = useState(false);
   const [selectedHousing, setSelectedHousing] = useState<HousingOption | null>(
     null
   );
-  const [selectedCollection, setSelectedCollection] =
-    useState<Collection | null>(null);
 
-  // Mock data initialization
+  // Fetch real housing data from backend
+  useEffect(() => {
+    const fetchHousingData = async () => {
+      try {
+        const response = await fetch("http://localhost:5001/api/housing");
+        if (response.ok) {
+          const data = await response.json();
+          setHousingOptions(data.housingOptions || []);
+        } else {
+          console.error("Failed to fetch housing data");
+          // Fallback to empty array if fetch fails
+          setHousingOptions([]);
+        }
+      } catch (error) {
+        console.error("Error fetching housing data:", error);
+        // Fallback to empty array if fetch fails
+        setHousingOptions([]);
+      }
+    };
+
+    fetchHousingData();
+    // Clear any persisted collections to ensure they start empty
+    clearCollections();
+  }, [setHousingOptions, clearCollections]);
+
+  // Mock data initialization (keeping for reference)
   useEffect(() => {
     // Mock housing data
     const mockHousing: HousingOption[] = [
@@ -151,23 +220,10 @@ function App() {
       },
     ];
 
-    // Mock collections data
-    const mockCollections: Collection[] = [
-      {
-        id: "collection1",
-        userId: "current-user",
-        name: "My Favorites",
-        housingOptions: ["1", "2"],
-        sharedWith: [],
-        isPublic: false,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    ];
-
-    setHousingOptions(mockHousing);
-    setCollections(mockCollections);
-  }, [setHousingOptions, setCollections]);
+    // setHousingOptions(mockHousing); // Commented out - now using real data from backend
+    // Clear any persisted collections to ensure they start empty
+    // clearCollections(); // Commented out - already called in the real data useEffect
+  }, [setHousingOptions, clearCollections]);
 
   const handleVoiceTranscript = (transcript: string, entities: any[]) => {
     console.log("Voice transcript:", transcript);
@@ -177,15 +233,12 @@ function App() {
 
   const handleHousingLike = (housing: HousingOption) => {
     console.log("Liked housing:", housing.title);
-    // In a real app, this would add to favorites or collections
+    // Add to "My Favorites" collection
+    addToSavedCollection(housing);
   };
 
   const handleHousingDislike = (housing: HousingOption) => {
     console.log("Disliked housing:", housing.title);
-  };
-
-  const handleHousingSuperLike = (housing: HousingOption) => {
-    console.log("Super liked housing:", housing.title);
   };
 
   const handleSearch = (filters: any) => {
@@ -197,10 +250,15 @@ function App() {
     console.log("Campus changed:", campus);
   };
 
+  const handleCreateCollection = (name: string) => {
+    createCollection(name);
+  };
+
   return (
     <HelmetProvider>
       <Router>
         <div className="App">
+          <AnimatedBackground />
           <Toaster position="top-right" />
 
           <Header
@@ -208,47 +266,63 @@ function App() {
             isAuthenticated={auth.isAuthenticated}
             user={auth.user}
             onAuthClick={() => setShowAuth(true)}
+            onLogout={logout}
           />
 
           <main className="App-main">
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route
-                path="/discover"
-                element={
-                  <DiscoverPage
-                    housingOptions={housingOptions}
-                    onHousingSelect={setSelectedHousing}
-                    onVoiceTranscript={handleVoiceTranscript}
-                    onSearch={handleSearch}
-                    onCampusChange={handleCampusChange}
-                    onLike={handleHousingLike}
-                    onDislike={handleHousingDislike}
-                    onSuperLike={handleHousingSuperLike}
-                  />
-                }
-              />
-              <Route
-                path="/collections"
-                element={
-                  <CollectionsPage
-                    collections={collections}
-                    housingOptions={housingOptions}
-                    onCollectionSelect={setSelectedCollection}
-                  />
-                }
-              />
-              <Route
-                path="/profile"
-                element={
-                  auth.isAuthenticated ? (
-                    <ProfilePage user={auth.user} />
-                  ) : (
-                    <Navigate to="/" replace />
-                  )
-                }
-              />
-            </Routes>
+            <AnimatePresence mode="wait">
+              <Routes>
+                <Route
+                  path="/"
+                  element={
+                    <AnimatedPage>
+                      <HomePage />
+                    </AnimatedPage>
+                  }
+                />
+                <Route
+                  path="/discover"
+                  element={
+                    <AnimatedPage>
+                      <DiscoverPage
+                        housingOptions={housingOptions}
+                        onHousingSelect={setSelectedHousing}
+                        onVoiceTranscript={handleVoiceTranscript}
+                        onLike={handleHousingLike}
+                        onDislike={handleHousingDislike}
+                      />
+                    </AnimatedPage>
+                  }
+                />
+                <Route
+                  path="/collections"
+                  element={
+                    <AnimatedPage>
+                      <CollectionsPage
+                        collections={collections}
+                        housingOptions={housingOptions}
+                        onCreateCollection={handleCreateCollection}
+                        onCollectionSelect={(collection: Collection) =>
+                          console.log("Selected collection:", collection)
+                        }
+                      />
+                    </AnimatedPage>
+                  }
+                />
+                <Route
+                  path="/profile"
+                  element={
+                    auth.isAuthenticated && auth.user ? (
+                      <AnimatedPage>
+                        <ProfilePage user={auth.user} />
+                      </AnimatedPage>
+                    ) : (
+                      <Navigate to="/" replace />
+                    )
+                  }
+                />
+              </Routes>
+            </AnimatePresence>
           </main>
 
           <Footer />
@@ -275,34 +349,6 @@ function App() {
                     onAddTag={(tag) => console.log("Add tag:", tag)}
                     onReportReview={(reviewId) =>
                       console.log("Report review:", reviewId)
-                    }
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {selectedCollection && (
-            <div className="modal-overlay">
-              <div className="modal-content collection-modal">
-                <div className="modal-header">
-                  <h3>{selectedCollection.name}</h3>
-                  <button
-                    className="close-btn"
-                    onClick={() => setSelectedCollection(null)}
-                  >
-                    ×
-                  </button>
-                </div>
-                <div className="modal-body">
-                  <CollectionSharing
-                    collection={selectedCollection}
-                    housingOptions={housingOptions}
-                    onUpdate={(collection) =>
-                      console.log("Update collection:", collection)
-                    }
-                    onDelete={(collectionId) =>
-                      console.log("Delete collection:", collectionId)
                     }
                   />
                 </div>

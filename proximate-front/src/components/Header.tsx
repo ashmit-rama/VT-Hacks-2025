@@ -9,6 +9,7 @@ interface HeaderProps {
   isAuthenticated?: boolean;
   user?: UserType | null;
   onAuthClick?: () => void;
+  onLogout?: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -16,6 +17,7 @@ const Header: React.FC<HeaderProps> = ({
   isAuthenticated = false,
   user,
   onAuthClick,
+  onLogout,
 }) => {
   return (
     <header className="header">
@@ -39,12 +41,11 @@ const Header: React.FC<HeaderProps> = ({
             <div className="user-menu">
               <Link to="/profile" className="nav-link user-link">
                 <User size={16} />
-                {user?.name || "Profile"}
+                {user?.firstName
+                  ? `${user.firstName} ${user.lastName}`
+                  : "Profile"}
               </Link>
-              <button
-                className="logout-btn"
-                onClick={() => console.log("Logout")}
-              >
+              <button className="logout-btn" onClick={onLogout} title="Logout">
                 <LogOut size={16} />
               </button>
             </div>

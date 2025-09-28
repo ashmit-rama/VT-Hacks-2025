@@ -1,0 +1,97 @@
+.animated-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 3px solid rgba(255, 165, 0, 0.5);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  overflow: hidden;
+}
+
+.animated-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  border-radius: 20px;
+  pointer-events: none;
+}
+
+.card-glow {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(
+    45deg,
+    #FFA500,
+    #FF8C00,
+    #FFA500,
+    #FF8C00
+  );
+  border-radius: 22px;
+  opacity: 0;
+  filter: blur(8px);
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.animated-card:hover .card-glow {
+  opacity: 0.6;
+}
+
+.card-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Special variants */
+.animated-card.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(30px);
+  border: 2px solid rgba(255, 165, 0, 0.4);
+}
+
+.animated-card.neon-card {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--glow-color, #667eea);
+  box-shadow: 
+    0 0 20px rgba(102, 126, 234, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.animated-card.gradient-card {
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.1) 0%,
+    rgba(118, 75, 162, 0.1) 100%
+  );
+  border: 3px solid rgba(255, 165, 0, 0.5);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .animated-card {
+    padding: 16px;
+    border-radius: 16px;
+  }
+  
+  .card-glow {
+    border-radius: 18px;
+  }
+}

@@ -1,5 +1,5 @@
 .header {
-  background-color: #282c34;
+  background-color: var(--primary-color);
   padding: 1rem 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: sticky;
@@ -21,10 +21,14 @@
 }
 
 .header-title {
-  color: #61dafb;
+  color: #ffffff !important;
   margin: 0;
   font-size: 1.5rem;
   font-weight: 700;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: unset !important;
+  background-clip: unset !important;
 }
 
 .header-nav {
@@ -34,7 +38,7 @@
 }
 
 .nav-link {
-  color: white;
+  color: #ffffff;
   text-decoration: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
@@ -45,7 +49,7 @@
 }
 
 .nav-link:hover {
-  background-color: rgba(97, 218, 251, 0.1);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .user-menu {
@@ -55,12 +59,12 @@
 }
 
 .user-link {
-  background-color: rgba(97, 218, 251, 0.1);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .auth-btn {
-  background: #61dafb;
-  color: white;
+  background: var(--text-secondary);
+  color: #ffffff;
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
@@ -70,13 +74,13 @@
 }
 
 .auth-btn:hover {
-  background: #4fa8c5;
+  background: rgba(255, 255, 255, 0.9);
 }
 
 .logout-btn {
   background: none;
   border: none;
-  color: white;
+  color: #ffffff;
   padding: 0.5rem;
   border-radius: 4px;
   cursor: pointer;

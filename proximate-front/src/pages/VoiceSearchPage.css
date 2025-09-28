@@ -1,0 +1,126 @@
+.voice-search-page {
+  min-height: 100vh;
+  background-color: var(--background-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.voice-search-container {
+  max-width: 800px;
+  width: 100%;
+}
+
+.back-button {
+  margin-bottom: 40px;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.back-link:hover {
+  color: var(--primary-color);
+}
+
+.voice-search-content {
+  text-align: center;
+}
+
+.voice-search-content h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 16px 0;
+  line-height: 1.2;
+}
+
+.voice-search-subtitle {
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  margin: 0 0 60px 0;
+  line-height: 1.6;
+}
+
+.search-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 32px;
+  margin-top: 40px;
+}
+
+.search-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 32px;
+  background: var(--background-white);
+  border-radius: 20px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 2px solid transparent;
+}
+
+.search-option:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  border-color: var(--primary-color);
+}
+
+.option-icon {
+  width: 100px;
+  height: 100px;
+  background: var(--primary-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  color: var(--text-secondary);
+}
+
+.search-option h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 16px 0;
+}
+
+.search-option p {
+  color: var(--text-primary);
+  line-height: 1.6;
+  margin: 0;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .voice-search-content h1 {
+    font-size: 2.5rem;
+  }
+  
+  .voice-search-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .search-options {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  .search-option {
+    padding: 32px 24px;
+  }
+  
+  .option-icon {
+    width: 80px;
+    height: 80px;
+  }
+}

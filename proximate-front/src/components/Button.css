@@ -16,26 +16,26 @@
 
 /* Variants */
 .btn-primary {
-  background-color: #61dafb;
-  color: #282c34;
+  background-color: #861F41;
+  color: #FFFFFF;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #4fa8c5;
+  background-color: #6B1A35;
 }
 
 .btn-secondary {
-  background-color: #6c757d;
-  color: white;
+  background-color: #75787B;
+  color: #FFFFFF;
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background-color: #5a6268;
+  background-color: #5E6164;
 }
 
 .btn-danger {
   background-color: #dc3545;
-  color: white;
+  color: #FFFFFF;
 }
 
 .btn-danger:hover:not(:disabled) {

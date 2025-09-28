@@ -1,0 +1,225 @@
+.search-page {
+  min-height: 100vh;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.search-container {
+  width: 100%;
+  max-width: 800px;
+  background: transparent;
+  border-radius: 20px;
+  box-shadow: none;
+  padding: 40px;
+  border: 3px solid rgba(255, 165, 0, 0.8);
+}
+
+.back-button {
+  margin-bottom: 30px;
+}
+
+.back-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: #ffffff !important;
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.back-link:hover {
+  color: var(--primary-color);
+}
+
+.search-content {
+  text-align: center;
+}
+
+.search-content h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ffffff !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: unset !important;
+  background-clip: unset !important;
+  margin: 0 0 16px 0;
+}
+
+.search-subtitle {
+  font-size: 1.2rem;
+  color: #ffffff !important;
+  margin: 0 0 40px 0;
+  line-height: 1.5;
+}
+
+.search-interface {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+}
+
+.search-bar-container {
+  display: flex;
+  gap: -6px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.search-input-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ffffff !important;
+  z-index: 1;
+}
+
+.search-input {
+  width: 100%;
+  padding: 16px 16px 16px 48px;
+  border: 3px solid rgba(255, 165, 0, 0.8) !important;
+  border-radius: 12px;
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff !important;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: rgba(255, 165, 0, 1) !important;
+  box-shadow: 0 0 0 3px rgba(255, 165, 0, 0.3);
+}
+
+.search-input::placeholder {
+  color: #ffffff !important;
+  opacity: 0.8;
+}
+
+.search-page .search-btn,
+.search-container .search-btn,
+button.search-btn {
+  padding: 16px 32px !important;
+  background: transparent !important;
+  color: white !important;
+  border: 3px solid rgba(255, 165, 0, 0.8) !important;
+  border-radius: 12px !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  white-space: nowrap !important;
+}
+
+.search-btn:hover:not(:disabled) {
+  background: rgba(255, 165, 0, 0.1) !important;
+  border-color: rgba(255, 165, 0, 1) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 15px rgba(255, 165, 0, 0.3) !important;
+}
+
+.search-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.voice-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.voice-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 40px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.voice-btn:hover {
+  background: #6B1A35;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(134, 31, 65, 0.3);
+}
+
+.voice-description {
+  color: #ffffff !important;
+  font-size: 14px;
+  margin: 0;
+  text-align: center;
+}
+
+.voice-input-section {
+  margin-top: 30px;
+  padding: 20px;
+  background: transparent;
+  border-radius: 12px;
+  border: 3px solid rgba(255, 165, 0, 0.8);
+}
+
+.search-preview {
+  margin-top: 20px;
+  padding: 16px;
+  background: transparent;
+  border-radius: 8px;
+  border: 3px solid rgba(255, 165, 0, 0.8);
+}
+
+.search-preview p {
+  margin: 0;
+  color: #ffffff !important;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .search-container {
+    padding: 30px 20px;
+  }
+  
+  .search-content h1 {
+    font-size: 2rem;
+  }
+  
+  .search-subtitle {
+    font-size: 1rem;
+  }
+  
+  .search-bar-container {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .search-btn {
+    width: 100%;
+    padding: 16px;
+  }
+  
+  .voice-btn {
+    padding: 16px 32px;
+    font-size: 16px;
+  }
+}

@@ -7,4 +7,3 @@ export { default as SwipeableDiscovery } from './SwipeableDiscovery/SwipeableDis
 export { default as CommunityFeatures } from './CommunityFeatures/CommunityFeatures';
 export { default as CampusSearch } from './CampusSearch/CampusSearch';
 export { default as Auth } from './Auth/Auth';
-export { default as CollectionSharing } from './CollectionSharing/CollectionSharing';

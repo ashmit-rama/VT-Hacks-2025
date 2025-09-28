@@ -1,34 +1,32 @@
 export interface User {
   id: string;
+  username: string;
   email: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   preferences: UserPreferences;
-  role: 'student' | 'tenant' | 'landlord' | 'admin';
+  profilePicture?: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
 export interface UserPreferences {
-  commuteMode: 'walking' | 'biking' | 'driving' | 'public_transport';
-  commuteTime: number; // in minutes
-  budget: {
+  campus: 'blacksburg' | 'arlington' | 'roanoke';
+  priceRange: {
     min: number;
     max: number;
   };
-  quietHours: {
-    start: string; // HH:MM format
-    end: string;
-  };
-  interests: string[];
-  accessibilityNeeds: string[];
-  campus: string;
-  schoolDistance: number; // in miles
-  gymDistance: number; // in miles
+  bedrooms: number[];
+  bathrooms: number[];
+  amenities: string[];
+  distanceToCampus: number;
   petFriendly: boolean;
   furnished: boolean;
   parking: boolean;
   laundry: boolean;
   wifi: boolean;
+  moveInDate: Date;
+  leaseLength: number;
 }
 
 export interface HousingOption {
@@ -114,17 +112,24 @@ export interface ExtractedEntity {
 
 export interface SwipeAction {
   housingId: string;
-  action: 'like' | 'dislike' | 'super_like';
+  action: 'like' | 'dislike';
   timestamp: Date;
 }
 
 export interface Collection {
   id: string;
-  userId: string;
   name: string;
-  housingOptions: string[];
-  sharedWith: string[];
+  description: string;
+  createdBy: string;
+  housingOptions: HousingOption[];
+  sharedWith: Array<{
+    user: string;
+    username: string;
+    sharedAt: Date;
+    canEdit: boolean;
+  }>;
   isPublic: boolean;
+  tags: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -165,6 +170,7 @@ export interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
+  token: string | null;
 }
 
 export interface AppState {

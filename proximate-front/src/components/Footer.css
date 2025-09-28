@@ -1,7 +1,7 @@
 .footer {
-  background-color: #282c34;
-  color: white;
-  padding: 2rem 0;
+  background-color: var(--primary-color);
+  color: #ffffff;
+  padding: 3rem 0 1rem 0;
   margin-top: auto;
 }
 
@@ -9,22 +9,131 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.footer-section {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+}
+
+.footer-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  color: #ffffff;
+}
+
+.footer-subtitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+  color: #ffffff;
+}
+
+.footer-description {
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  margin: 0 0 1.5rem 0;
 }
 
 .footer-links {
   display: flex;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .footer-link {
-  color: #61dafb;
+  color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
   transition: color 0.3s ease;
+  padding: 0.25rem 0;
 }
 
 .footer-link:hover {
-  color: white;
+  color: #ffffff;
+}
+
+.social-links {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  color: #ffffff;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.social-link:hover {
+  background: var(--text-secondary);
+  color: var(--primary-color);
+  transform: translateY(-2px);
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.footer-bottom {
+  border-top: 3px solid rgba(255, 165, 0, 0.4);
+  padding-top: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-bottom p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.footer-bottom-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .footer-bottom-links {
+    justify-content: center;
+  }
+  
+  .social-links {
+    justify-content: center;
+  }
 }

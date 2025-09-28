@@ -1,38 +1,60 @@
+/* Complete Rewrite - SwipeableDiscovery Styles */
+
 .swipeable-discovery {
-  max-width: 400px;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 700px;
   padding: 20px;
-  position: relative;
+  box-sizing: border-box;
 }
 
 .swipeable-stack {
   position: relative;
-  height: 600px;
-  margin-bottom: 20px;
+  width: 100%;
+  max-width: 800px;
+  height: 500px;
+  margin: 0 auto;
 }
 
-.housing-card {
+.housing-card-wrapper {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  cursor: grab;
-  user-select: none;
+  width: 100%;
+  height: 100%;
 }
 
-.housing-card:active {
-  cursor: grabbing;
+.housing-card {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  cursor: default;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
 }
 
 .housing-card-image {
+  flex: 0 0 200px;
   position: relative;
-  height: 300px;
   overflow: hidden;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 16px;
 }
 
 .housing-card-image img {
@@ -43,41 +65,41 @@
 
 .housing-card-price {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 12px;
+  right: 12px;
   background: rgba(0, 0, 0, 0.8);
   color: white;
-  padding: 8px 12px;
-  border-radius: 20px;
+  padding: 6px 10px;
+  border-radius: 16px;
   font-weight: 600;
+  font-size: 14px;
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 14px;
 }
 
 .housing-card-content {
-  padding: 20px;
-  height: 300px;
+  flex: 1;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 8px;
 }
 
 .housing-card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 8px;
+  gap: 12px;
 }
 
 .housing-title {
   font-size: 18px;
   font-weight: 600;
-  color: #333;
+  color: #ffffff;
   margin: 0;
   flex: 1;
-  margin-right: 12px;
+  line-height: 1.3;
 }
 
 .housing-rating {
@@ -85,7 +107,7 @@
   align-items: center;
   gap: 4px;
   font-size: 14px;
-  color: #666;
+  color: #ffffff;
   white-space: nowrap;
 }
 
@@ -93,15 +115,14 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #666;
+  color: #ffffff;
   font-size: 14px;
-  margin-bottom: 12px;
 }
 
 .housing-details {
   display: flex;
   gap: 16px;
-  margin-bottom: 12px;
+  flex-wrap: wrap;
 }
 
 .detail-item {
@@ -109,19 +130,19 @@
   align-items: center;
   gap: 4px;
   font-size: 14px;
-  color: #666;
+  color: #ffffff;
 }
 
 .housing-amenities {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-bottom: 12px;
+  margin-top: auto;
 }
 
 .amenity-tag {
-  background: #f0f8ff;
-  color: #61dafb;
+  background: rgba(255, 165, 0, 0.3);
+  color: #ffffff;
   padding: 4px 8px;
   border-radius: 12px;
   font-size: 12px;
@@ -130,75 +151,31 @@
 
 .amenity-tag.more {
   background: #f5f5f5;
-  color: #999;
-}
-
-.housing-distance {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 12px;
-}
-
-.distance-item {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.distance-label {
-  font-size: 12px;
-  color: #999;
-}
-
-.distance-value {
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
-}
-
-.community-tags {
-  margin-top: auto;
-}
-
-.tags-label {
-  font-size: 12px;
-  color: #999;
-  margin-bottom: 6px;
-  display: block;
-}
-
-.tags-list {
-  display: flex;
-  gap: 6px;
-}
-
-.community-tag {
-  background: #e8f5e8;
-  color: #4caf50;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
+  color: #ffffff;
 }
 
 .swipeable-actions {
   display: flex;
   justify-content: center;
-  gap: 24px;
-  margin-bottom: 20px;
+  gap: 32px;
+  margin-top: 24px;
+  width: 100%;
+  max-width: 600px;
+  padding: 0 20px;
 }
 
 .action-button {
-  width: 60px;
-  height: 60px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  font-size: 24px;
 }
 
 .action-button:disabled {
@@ -207,39 +184,43 @@
 }
 
 .action-button.dislike {
-  background: #ff6b6b;
+  background: #ff4757;
   color: white;
 }
 
 .action-button.dislike:hover:not(:disabled) {
-  background: #ff5252;
-  transform: scale(1.1);
-}
-
-.action-button.super-like {
-  background: #ffd700;
-  color: white;
-}
-
-.action-button.super-like:hover:not(:disabled) {
-  background: #ffcc02;
-  transform: scale(1.1);
+  background: #FFA500;
+  transform: scale(1.05);
 }
 
 .action-button.like {
-  background: #4caf50;
+  background: #2ed573;
   color: white;
 }
 
 .action-button.like:hover:not(:disabled) {
-  background: #45a049;
-  transform: scale(1.1);
+  background: #FFA500;
+  transform: scale(1.05);
+}
+
+.action-button.favorites {
+  background: #ffd700;
+  color: white;
+}
+
+.action-button.favorites:hover:not(:disabled) {
+  background: #FFA500;
+  transform: scale(1.05);
 }
 
 .swipeable-progress {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
+  margin-top: 16px;
+  width: 100%;
+  max-width: 400px;
 }
 
 .progress-bar {
@@ -252,35 +233,110 @@
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #61dafb, #4fa8c5);
+  background: linear-gradient(90deg, #667eea, #764ba2);
   border-radius: 2px;
   transition: width 0.3s ease;
 }
 
 .progress-text {
   font-size: 14px;
-  color: #666;
+  color: #ffffff;
   white-space: nowrap;
+  min-width: 60px;
 }
 
 .swipeable-discovery-empty {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 400px;
+  text-align: center;
 }
 
 .empty-state {
-  text-align: center;
-  color: #666;
+  color: #ffffff !important;
 }
 
 .empty-state h3 {
-  margin: 16px 0 8px 0;
-  color: #333;
+  margin: 0 0 8px 0;
+  color: #ffffff !important;
+  font-size: 20px;
 }
 
 .empty-state p {
   margin: 0;
   font-size: 14px;
+  color: #ffffff !important;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .swipeable-discovery {
+    min-height: 600px;
+    padding: 16px;
+  }
+  
+  .swipeable-stack {
+    height: 450px;
+  }
+  
+  .housing-card-image {
+    flex: 0 0 180px;
+  }
+  
+  .housing-card-content {
+    padding: 12px;
+  }
+  
+  .housing-title {
+    font-size: 16px;
+  }
+  
+  .swipeable-actions {
+    gap: 24px;
+    margin-top: 20px;
+  }
+  
+  .action-button {
+    width: 56px;
+    height: 56px;
+    font-size: 20px;
+  }
+  
+  .housing-details {
+    gap: 12px;
+  }
+  
+  .detail-item {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .swipeable-discovery {
+    padding: 12px;
+  }
+  
+  .swipeable-stack {
+    height: 400px;
+  }
+  
+  .housing-card-image {
+    flex: 0 0 160px;
+  }
+  
+  .housing-card-content {
+    padding: 10px;
+  }
+  
+  .swipeable-actions {
+    gap: 20px;
+  }
+  
+  .action-button {
+    width: 48px;
+    height: 48px;
+    font-size: 18px;
+  }
 }
